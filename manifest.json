@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-sample-plugin",
-	"name": "Sample Plugin",
-	"version": "1.0.0",
+	"id": "xkyii-obsidian-paste-renamer",
+	"name": "Paste Rename Plugin",
+	"version": "0.0.1",
 	"minAppVersion": "0.15.0",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
+	"description": "Just rename paste image name with specialized pattern.",
+	"author": "xkyii",
+	"authorUrl": "https://xkyii.com",
 	"isDesktopOnly": false
 }

@@ -14,6 +14,7 @@ const DEFAULT_SETTINGS: PluginSettings = {
 };
 
 const PASTED_IMAGE_PREFIX = 'Pasted image ';
+const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif'];
 
 export default class RenamerPlugin extends Plugin {
 	settings: PluginSettings;
@@ -99,7 +100,7 @@ export default class RenamerPlugin extends Plugin {
 		if (useMarkdownLinks) {
 			// NOTE should use this.app.fileManager.generateMarkdownLink(file, sourcePath) to get the encoded newNameStem, right now we just ignore this problem
 			linkTextRegex = new RegExp(`!\\[\\]\\(([^[\\]]*\\/)?${originStem}\\.${ext}\\)`)
-			newLinkText = `![]($1${newNameStem}.${ext}])`
+			newLinkText = `![]($1${newNameStem}.${ext})`
 		} else {
 			// ![[xxxx.png]] -> ![[attachments/xxxx.png]]
 			linkTextRegex = new RegExp(`!\\[\\[([^[\\]]*\\/)?${originStem}\\.${ext}\\]\\]`)
@@ -172,7 +173,11 @@ function isPastedImage(file: TAbstractFile): boolean {
 	if (file instanceof TFile) {
 		if (file.name.startsWith(PASTED_IMAGE_PREFIX)) {
 			console.log("file is image.", file);
-			return true
+			return true;
+		}
+		if (IMAGE_EXTENSIONS.contains(file.extension)) {
+			console.log("file is image. (with ext check)", file);
+			return true;
 		}
 	}
 	console.log("file is NOT image.", file);

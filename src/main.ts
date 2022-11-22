@@ -1,7 +1,7 @@
 import { App, TFile, TAbstractFile, Plugin, PluginSettingTab, Setting, MarkdownView, Notice } from 'obsidian';
 import { renderTemplate } from './template';
 import { path } from './path';
-import { getVaultConfig } from './util';
+import { getVaultConfig, toRegex } from './util';
 
 // Remember to rename these classes and interfaces!
 
@@ -73,11 +73,13 @@ export default class RenamerPlugin extends Plugin {
 	async renameFile(file: TFile, newName: string, activeFile: TFile) {
 
 		const originName = file.name;
-		const originStem = encodeURI(file.basename);
+		const originStem = toRegex(file.basename);
 		const ext = file.extension;
 		const newNameExt = path.extension(newName);
 		const newNameStem = newName.slice(0, newName.length - newNameExt.length - 1);
 
+		console.log(file);
+		console.log('file.basename:', file.basename);
 		console.log("originStem: ", originStem);
 		console.log("ext: ", ext);
 
@@ -94,7 +96,7 @@ export default class RenamerPlugin extends Plugin {
 		/// replace current line
 		const vaultConfig = getVaultConfig(this.app);
 		const useMarkdownLinks = (vaultConfig && vaultConfig.useMarkdownLinks);
-
+		console.log('useMarkdownLinks:', useMarkdownLinks);
 
 		let linkTextRegex, newLinkText
 		if (useMarkdownLinks) {
@@ -111,6 +113,7 @@ export default class RenamerPlugin extends Plugin {
 
 		// '![](../../assets/material/2022/10/Pasted%20image%2020221026172752.png)'.match('!\\[\\]\\(([^[\\]]*\\/)?Pasted%20image%2020221026172752.png\\)')
 
+		// '![](../../../../assets/material/2022/11/$0NNHAVH$WZ{HTVZ43GUO%H.png)'.replace(/!\[\]\(([^[\]]*\/)?$0NNHAVH$WZ%7BHTVZ43GUO%25H\.png\)/, '![]($12022.11.22-102701.png)')
 		const editor = this.app.workspace.getActiveViewOfType(MarkdownView)?.editor;
 		if (!editor) {
 			new Notice(`Failed to rename ${newName}: no active editor`)
